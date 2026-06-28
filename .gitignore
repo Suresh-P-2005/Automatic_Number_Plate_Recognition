@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Virtualenv / uv
+.venv/
+venv/
+env/
+.python-version
+
+# Tests / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.hypothesis/
+__snapshots__/
+
+# Type checkers
+.mypy_cache/
+.pyright/
+.ruff_cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Models / runtime artifacts
+*.pt
+*.onnx
+*.engine
+*.trt
+*.plan
+runs/
+checkpoints/
+
+# App data (KVKK/GDPR — never commit)
+*.db
+*.db-shm
+*.db-wal
+data/detections/
+data/uploads/
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Legacy artifacts left behind
+legacy/runs/
+legacy/static/image0.jpg
+legacy/ocr_results.csv
+
+# Docker
+.docker-data/
