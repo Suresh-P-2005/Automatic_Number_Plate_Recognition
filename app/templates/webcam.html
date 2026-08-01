@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Live Webcam ANPR
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+
+</head>
+
+<body>
+
+    <main class="container">
+
+        <section class="hero">
+
+            <h1>
+                Live Webcam ANPR
+            </h1>
+
+            <p>
+                Start your webcam and detect
+                vehicle licence plates in real time.
+            </p>
+
+        </section>
+
+
+        <section class="webcam-section">
+
+            <div class="camera-panel">
+
+                <h2>
+                    Live Camera
+                </h2>
+
+                <video
+                    id="webcam"
+                    autoplay
+                    playsinline
+                ></video>
+
+            </div>
+
+
+            <div class="camera-panel">
+
+                <h2>
+                    ANPR Output
+                </h2>
+
+                <img
+                    id="processed-frame"
+                    alt="Processed ANPR output"
+                >
+
+            </div>
+
+        </section>
+
+
+        <section class="webcam-controls">
+
+            <button
+                id="start-camera"
+            >
+
+                Start Webcam
+
+            </button>
+
+
+            <button
+                id="stop-camera"
+                disabled
+            >
+
+                Stop Webcam
+
+            </button>
+
+            <button
+                id="clear-results"
+                type="button"
+            >
+
+                Clear Results
+
+            </button>
+
+        </section>
+
+
+        <section class="result-section">
+
+            <h2>
+                Current Detection
+            </h2>
+
+            <div
+                id="detection-status"
+            >
+
+                Webcam is not running.
+
+            </div>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Vehicle ID
+                        </th>
+
+                        <th>
+                            Licence Plate
+                        </th>
+
+                        <th>
+                            OCR Readings
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody
+                    id="result-table"
+                >
+
+                    <tr>
+
+                        <td
+                            colspan="3"
+                        >
+
+                            No results yet.
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+
+        <a
+            class="back-button"
+            href="/"
+        >
+
+            Back to Dashboard
+
+        </a>
+
+    </main>
+
+
+    <canvas
+        id="capture-canvas"
+        hidden
+    ></canvas>
+
+
+    <script
+        src="/static/webcam.js"
+    ></script>
+
+</body>
+
+</html>

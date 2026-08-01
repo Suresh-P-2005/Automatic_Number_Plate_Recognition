@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ANPR Video Result
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+
+</head>
+
+<body>
+
+    <main class="container">
+
+        <section class="hero">
+
+            <h1>
+                Video ANPR Result
+            </h1>
+
+            <p>
+                Video processing completed.
+            </p>
+
+        </section>
+
+
+        <section class="result-section">
+
+            <h2>
+                Processing Summary
+            </h2>
+
+            <div class="summary-grid">
+
+                <div class="summary-card">
+
+                    <h3>
+                        Frames Processed
+                    </h3>
+
+                    <p>
+                        {{ frames_processed }}
+                    </p>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <h3>
+                        Recognised Vehicles
+                    </h3>
+
+                    <p>
+                        {{ total_vehicles }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="result-section">
+
+            <h2>
+                Processed Video
+            </h2>
+
+            <video
+                class="result-video"
+                controls
+            >
+
+                <source
+                    src="{{ output_video }}"
+                    type="video/mp4"
+                >
+
+                Your browser does not support
+                video playback.
+
+            </video>
+
+        </section>
+
+
+        <section class="result-section">
+
+            <h2>
+                Detected Licence Plates
+            </h2>
+
+
+            {% if results %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Vehicle ID
+                        </th>
+
+                        <th>
+                            Licence Plate
+                        </th>
+
+                        <th>
+                            OCR Readings
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for result in results %}
+
+                    <tr>
+
+                        <td>
+                            {{ result.vehicle_id }}
+                        </td>
+
+                        <td>
+                            {{ result.license_plate }}
+                        </td>
+
+                        <td>
+                            {{ result.number_of_readings }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+
+            <a
+                class="download-button"
+                href="{{ csv_file }}"
+                download
+            >
+
+                Download CSV Results
+
+            </a>
+
+
+            {% else %}
+
+            <p>
+                No valid licence plates
+                were recognised.
+            </p>
+
+            {% endif %}
+
+        </section>
+
+
+        <a
+            class="back-button"
+            href="/"
+        >
+
+            Process Another File
+
+        </a>
+
+    </main>
+
+</body>
+
+</html>
