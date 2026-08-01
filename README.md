@@ -2,11 +2,11 @@
 
 [![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-00FFFF?style=for-the-badge)](https://github.com/ultralytics/ultralytics)
+[![YOLOv11](https://img.shields.io/badge/YOLOv11-Ultralytics-00FFFF?style=for-the-badge)](https://github.com/ultralytics/ultralytics)
 [![OpenCV](https://img.shields.io/badge/OpenCV-4.8+-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org/)
 [![EasyOCR](https://img.shields.io/badge/EasyOCR-Supported-FF6F00?style=for-the-badge)](https://github.com/JaidedAI/EasyOCR)
 
-An end-to-end computer vision and deep learning web application for **Automatic Number Plate Recognition (ANPR)**. Built with **FastAPI**, **YOLOv8** custom models, **OpenCV**, and **EasyOCR**, this system detects vehicles, localizes license plates, performs OCR text extraction, validates plate syntax, and tracks results across live webcam feeds, IP RTSP streams, uploaded images, and recorded videos.
+An end-to-end computer vision and deep learning web application for **Automatic Number Plate Recognition (ANPR)**. Built with **FastAPI**, **YOLOv11** custom models, **OpenCV**, and **EasyOCR**, this system detects vehicles, localizes license plates, performs OCR text extraction, validates plate syntax, and tracks results across live webcam feeds, IP RTSP streams, uploaded images, and recorded videos.
 
 ---
 
@@ -16,7 +16,7 @@ An end-to-end computer vision and deep learning web application for **Automatic 
 - 🎥 **Video Stream Analytics**: Upload MP4/AVI videos for frame-by-frame detection, multi-frame confidence voting, automated `ffmpeg` web-optimized video rendering, and full detection playback.
 - 📷 **Real-Time Browser Webcam**: Interactive live webcam interface with asynchronous frame processing, continuous detection, and live log updates.
 - 🌐 **IP Camera Stream**: RTSP / HTTP video stream integration for real-time traffic, security, and parking surveillance monitoring.
-- 🎯 **Dual YOLOv8 Model Pipeline**: 
+- 🎯 **Dual YOLOv11 Model Pipeline**: 
   - **Vehicle Detector** (`vehicle_best.pt`): Detects cars, buses, trucks, and motorcycles.
   - **License Plate Localization** (`plate_best.pt`): Fine-tuned model for high-precision plate bounding box extraction.
 - 🔬 **Advanced Image Preprocessing**: 4x super-resolution cubic scaling, bilateral filtering, grayscale conversion, and adaptive thresholding to maximize OCR recognition accuracy.
@@ -30,7 +30,7 @@ An end-to-end computer vision and deep learning web application for **Automatic 
 ```
 ┌─────────────────┐     ┌──────────────────────┐     ┌────────────────────────┐
 │   Input Source  │     │   Vehicle Detection  │     │  License Plate Local.  │
-│ (Image/Video/   │ ──► │  (YOLOv8 Custom)     │ ──► │   (YOLOv8 Custom)      │
+│ (Image/Video/   │ ──► │  (YOLOv11 Custom)    │ ──► │   (YOLOv11 Custom)     │
 │  Webcam/RTSP)   │     └──────────────────────┘     └───────────┬────────────┘
 └─────────────────┘                                              │
                                                                  ▼
@@ -38,7 +38,7 @@ An end-to-end computer vision and deep learning web application for **Automatic 
 │ Web Dashboard   │     │  Format Validation   │     │  Image Preprocessing   │
 │   & CSV Export  │ ◄── │  & Regex Correction  │ ◄── │   & OCR Text Extraction│
 │                 │     │                      │     │  (OpenCV + EasyOCR)    │
-└─────────────────┘     └──────────────────────┘     └────────────────────────┘
+└─────────────────┘     └──────────────────────┘     └───────────┬────────────┘
 ```
 
 ---
@@ -71,8 +71,8 @@ Automatic_Number_Plate_Recognition/
 │   └── test_video_processor.py # Video test utility script
 │
 ├── models/                     # Deep Learning Weights
-│   ├── vehicle_best.pt         # Fine-tuned YOLOv8 vehicle detection model
-│   └── plate_best.pt           # Fine-tuned YOLOv8 license plate detector model
+│   ├── vehicle_best.pt         # Fine-tuned YOLOv11 vehicle detection model
+│   └── plate_best.pt           # Fine-tuned YOLOv11 license plate detector model
 │
 ├── test_images/                # Sample input images for testing
 ├── videos/                     # Sample input videos
