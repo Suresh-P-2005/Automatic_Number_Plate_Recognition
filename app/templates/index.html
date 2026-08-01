@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ANPR System</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+
+</head>
+
+<body>
+
+    <main class="container">
+
+        <section class="hero">
+
+            <h1>
+                Automatic Number Plate Recognition
+            </h1>
+
+            <p>
+                Upload an image or video to detect
+                vehicles and recognise licence plates.
+            </p>
+
+        </section>
+
+
+        <!-- IMAGE UPLOAD -->
+
+        <section class="upload-section">
+
+            <h2>
+                Image ANPR
+            </h2>
+
+            <p>
+                Upload a vehicle image.
+            </p>
+
+            <form
+                action="/process-image"
+                method="post"
+                enctype="multipart/form-data"
+            >
+
+                <input
+                    type="file"
+                    name="image"
+                    accept=".jpg,.jpeg,.png"
+                    required
+                >
+
+                <button
+                    type="submit"
+                >
+                    Upload and Process Image
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- VIDEO PLACEHOLDER -->
+
+        <section class="upload-section">
+
+            <h2>
+                Video ANPR
+            </h2>
+
+            <p>
+                Upload a video to detect vehicles,
+                track them, and recognise licence plates.
+            </p>
+
+            <form
+                action="/process-video"
+                method="post"
+                enctype="multipart/form-data"
+            >
+
+                <input
+                    type="file"
+                    name="video"
+                    accept=".mp4,.avi,.mov,.mkv"
+                    required
+                >
+
+                <button
+                    type="submit"
+                >
+                    Upload and Process Video
+                </button>
+
+            </form>
+
+            <p class="small-note">
+
+                Video processing may take time,
+                depending on video length.
+
+            </p>
+
+        </section>
+
+
+        <!-- WEBCAM PLACEHOLDER -->
+
+        <section class="upload-section">
+
+            <h2>
+                Webcam ANPR
+            </h2>
+
+            <p>
+                Use your Mac webcam for
+                live licence plate recognition.
+            </p>
+
+            <a
+                class="mode-link"
+                href="/webcam"
+            >
+
+                Open Webcam ANPR
+
+            </a>
+
+        </section>
+
+
+        <!-- IP CAMERA PLACEHOLDER -->
+        
+        <section class="upload-section">
+
+            <h2>
+                IP Camera ANPR
+            </h2>
+
+            <p>
+                Connect an IP camera stream
+                for live licence plate recognition.
+            </p>
+
+            <a
+                class="mode-link"
+                href="/ip-camera"
+            >
+                Open IP Camera ANPR
+            </a>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

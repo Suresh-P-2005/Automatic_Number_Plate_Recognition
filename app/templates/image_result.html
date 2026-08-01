@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ANPR Image Result
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+
+</head>
+
+<body>
+
+    <main class="container">
+
+        <section class="hero">
+
+            <h1>
+                Image ANPR Result
+            </h1>
+
+            <p>
+                Vehicle and licence plate
+                detection completed.
+            </p>
+
+        </section>
+
+
+        <section class="result-section">
+
+            <h2>
+                Processed Image
+            </h2>
+
+            <img
+                class="result-image"
+                src="{{ output_image }}"
+                alt="Processed ANPR result"
+            >
+
+        </section>
+
+
+        <section class="result-section">
+
+            <h2>
+                Detected Licence Plates
+            </h2>
+
+
+            {% if results %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Vehicle ID
+                        </th>
+
+                        <th>
+                            Licence Plate
+                        </th>
+
+                        <th>
+                            OCR Readings
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for result in results %}
+
+                    <tr>
+
+                        <td>
+                            {{ result.vehicle_id }}
+                        </td>
+
+                        <td>
+                            {{ result.license_plate }}
+                        </td>
+
+                        <td>
+                            {{ result.number_of_readings }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <p>
+                No vehicle or licence plate
+                was detected.
+            </p>
+
+            {% endif %}
+
+        </section>
+
+
+        <a
+            class="back-button"
+            href="/"
+        >
+            Process Another File
+        </a>
+
+    </main>
+
+</body>
+
+</html>

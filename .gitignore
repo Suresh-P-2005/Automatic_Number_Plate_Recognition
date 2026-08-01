@@ -1,0 +1,28 @@
+# Virtual environment
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# macOS
+.DS_Store
+
+# YOLO model weights
+*.pt
+
+# Large datasets
+datasets/
+data/
+
+# Generated training results
+runs/
+
+# Output files
+outputs/
+*.mp4
+*.avi
+
+# Jupyter checkpoints
+.ipynb_checkpoints/

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        IP Camera ANPR
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+
+</head>
+
+<body>
+
+    <main class="container">
+
+        <section class="hero">
+
+            <h1>
+                IP Camera ANPR
+            </h1>
+
+            <p>
+                Connect an IP camera stream
+                and perform live licence
+                plate recognition.
+            </p>
+
+        </section>
+
+
+        <section class="result-section">
+
+            <h2>
+                Connect Camera
+            </h2>
+
+            <form
+                id="ip-camera-form"
+            >
+
+                <label
+                    for="camera-url"
+                >
+
+                    Camera Stream URL
+
+                </label>
+
+
+                <input
+                    id="camera-url"
+                    type="text"
+                    placeholder="http://192.168.1.10:8080/video"
+                    required
+                >
+
+
+                <button
+                    type="submit"
+                >
+
+                    Connect Camera
+
+                </button>
+
+            </form>
+
+
+            <p class="small-note">
+
+                Example:
+
+                http://192.168.1.10:8080/video
+
+            </p>
+
+        </section>
+
+
+        <section class="webcam-controls">
+
+            <button
+                id="start-ip-camera"
+                disabled
+            >
+
+                Start ANPR
+
+            </button>
+
+
+            <button
+                id="stop-ip-camera"
+                disabled
+            >
+
+                Stop Camera
+
+            </button>
+
+
+            <button
+                id="clear-ip-results"
+                type="button"
+            >
+
+                Clear Results
+
+            </button>
+
+        </section>
+
+
+        <section class="webcam-section">
+
+            <div class="camera-panel">
+
+                <h2>
+                    IP Camera Feed
+                </h2>
+
+                <img
+                    id="ip-camera-frame"
+                    alt="IP camera feed"
+                >
+
+            </div>
+
+
+            <div class="camera-panel">
+
+                <h2>
+                    ANPR Output
+                </h2>
+
+                <img
+                    id="ip-processed-frame"
+                    alt="Processed ANPR output"
+                >
+
+            </div>
+
+        </section>
+
+
+        <section class="result-section">
+
+            <h2>
+                Camera Status
+            </h2>
+
+            <div
+                id="ip-camera-status"
+            >
+
+                Enter a camera URL
+                and connect.
+
+            </div>
+
+        </section>
+
+
+        <section class="result-section">
+
+            <h2>
+                Detected Licence Plates
+            </h2>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Vehicle ID
+                        </th>
+
+                        <th>
+                            Licence Plate
+                        </th>
+
+                        <th>
+                            OCR Readings
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody
+                    id="ip-result-table"
+                >
+
+                    <tr>
+
+                        <td
+                            colspan="3"
+                        >
+
+                            No results yet.
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+
+        <a
+            class="back-button"
+            href="/"
+        >
+
+            Back to Dashboard
+
+        </a>
+
+    </main>
+
+
+    <script
+        src="/static/ip_camera.js"
+    ></script>
+
+</body>
+
+</html>
