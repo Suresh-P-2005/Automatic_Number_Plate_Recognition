@@ -92,24 +92,8 @@ from video_processor import (
 webcam_anpr = ANPRSession()
 
 # ==========================================
-# GPU WRAPPERS
+# GPU WRAPPERS (Removed)
 # ==========================================
-
-@spaces.GPU
-def run_process_image(img):
-    return process_image(img)
-
-@spaces.GPU
-def run_process_video(in_path, out_path, csv_path):
-    return process_video(
-        input_video_path=in_path,
-        output_video_path=out_path,
-        csv_output_path=csv_path
-    )
-
-@spaces.GPU
-def run_process_frame(session, frame):
-    return session.process_frame(frame)
 
 # ==========================================
 # IP CAMERA VARIABLES
@@ -298,7 +282,8 @@ def home(
 @app.post(
     "/process-image"
 )
-async def process_uploaded_image(
+@spaces.GPU
+def process_uploaded_image(
     request: Request,
     image: UploadFile = File(...)
 ):
@@ -398,7 +383,7 @@ async def process_uploaded_image(
     # Run ANPR
 
     processed_image, results = (
-        run_process_image(
+        process_image(
             input_image
         )
     )
@@ -433,7 +418,8 @@ async def process_uploaded_image(
 @app.post(
     "/process-video"
 )
-async def process_uploaded_video(
+@spaces.GPU
+def process_uploaded_video(
     request: Request,
     video: UploadFile = File(...)
 ):
@@ -525,10 +511,10 @@ async def process_uploaded_video(
 
     # Run ANPR video processing
 
-    result = run_process_video(
-        in_path=input_path,
-        out_path=output_path,
-        csv_path=csv_path
+    result = process_video(
+        input_video_path=input_path,
+        output_video_path=output_path,
+        csv_output_path=csv_path
     )
 
 
@@ -590,14 +576,15 @@ def webcam_page(
 @app.post(
     "/process-webcam-frame"
 )
-async def process_webcam_frame(
+@spaces.GPU
+def process_webcam_frame(
     frame: UploadFile = File(...)
 ):
 
     # Read uploaded frame
 
     frame_bytes = (
-        await frame.read()
+        frame.file.read()
     )
 
 
@@ -635,8 +622,7 @@ async def process_webcam_frame(
     # Process using persistent session
 
     processed_frame, results = (
-        run_process_frame(
-            webcam_anpr,
+        webcam_anpr.process_frame(
             image
         )
     )
