@@ -25,14 +25,14 @@ from fastapi.templating import (
 
 try:
     import spaces
-    has_spaces = True
 except ImportError:
-    has_spaces = False
+    class DummySpaces:
+        def GPU(self, *args, **kwargs):
+            def decorator(func):
+                return func
+            return decorator
+    spaces = DummySpaces()
 
-def optional_gpu_decorator(func):
-    if has_spaces:
-        return spaces.GPU()(func)
-    return func
 
 
 # ==========================================
@@ -93,11 +93,11 @@ webcam_anpr = ANPRSession()
 # GPU WRAPPERS
 # ==========================================
 
-@optional_gpu_decorator
+@spaces.GPU()
 def run_process_image(img):
     return process_image(img)
 
-@optional_gpu_decorator
+@spaces.GPU()
 def run_process_video(in_path, out_path, csv_path):
     return process_video(
         input_video_path=in_path,
@@ -105,7 +105,7 @@ def run_process_video(in_path, out_path, csv_path):
         csv_output_path=csv_path
     )
 
-@optional_gpu_decorator
+@spaces.GPU()
 def run_process_frame(session, frame):
     return session.process_frame(frame)
 
