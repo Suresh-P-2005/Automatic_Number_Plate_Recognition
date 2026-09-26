@@ -6,6 +6,11 @@ WORKDIR /app
 # Install system dependencies (needed for OpenCV and building some Python packages)
 RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
+    libgl1-mesa-glx \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libxcb1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file and install dependencies
