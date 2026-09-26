@@ -23,12 +23,6 @@ from fastapi.templating import (
     Jinja2Templates
 )
 
-import spaces
-
-
-@spaces.GPU(duration=1)
-def _startup_probe():
-    pass
 
 # ==========================================
 # PROJECT PATHS
@@ -275,7 +269,6 @@ def home(
 @app.post(
     "/process-image"
 )
-@spaces.GPU
 def process_uploaded_image(
     request: Request,
     image: UploadFile = File(...)
@@ -411,7 +404,6 @@ def process_uploaded_image(
 @app.post(
     "/process-video"
 )
-@spaces.GPU
 def process_uploaded_video(
     request: Request,
     video: UploadFile = File(...)
@@ -569,7 +561,6 @@ def webcam_page(
 @app.post(
     "/process-webcam-frame"
 )
-@spaces.GPU
 def process_webcam_frame(
     frame: UploadFile = File(...)
 ):

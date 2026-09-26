@@ -1,11 +1,4 @@
 import uvicorn
-from app.main import app
-
-import spaces
-
-@spaces.GPU
-def dummy_function():
-    pass
 
 if __name__ == "__main__":
     # Hugging Face Spaces exposes port 7860
