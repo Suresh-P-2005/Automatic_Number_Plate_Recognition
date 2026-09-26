@@ -1,3 +1,14 @@
+---
+title: ANPR
+emoji: 🚗
+colorFrom: blue
+colorTo: green
+sdk: gradio
+sdk_version: "4.0.0"
+app_file: app.py
+pinned: false
+---
+
 # 🚗 Automatic Number Plate Recognition (ANPR) System
 
 [![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
