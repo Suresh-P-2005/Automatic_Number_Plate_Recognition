@@ -5,13 +5,15 @@ try:
     import spaces
 except ImportError:
     class DummySpaces:
-        def GPU(self, *args, **kwargs):
-            def decorator(func):
-                return func
-            return decorator
+        def GPU(self, func=None, *args, **kwargs):
+            if func is None:
+                def decorator(f):
+                    return f
+                return decorator
+            return func
     spaces = DummySpaces()
 
-@spaces.GPU()
+@spaces.GPU
 def dummy_function():
     pass
 

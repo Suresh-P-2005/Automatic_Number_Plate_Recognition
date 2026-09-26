@@ -27,10 +27,12 @@ try:
     import spaces
 except ImportError:
     class DummySpaces:
-        def GPU(self, *args, **kwargs):
-            def decorator(func):
-                return func
-            return decorator
+        def GPU(self, func=None, *args, **kwargs):
+            if func is None:
+                def decorator(f):
+                    return f
+                return decorator
+            return func
     spaces = DummySpaces()
 
 
@@ -93,11 +95,11 @@ webcam_anpr = ANPRSession()
 # GPU WRAPPERS
 # ==========================================
 
-@spaces.GPU()
+@spaces.GPU
 def run_process_image(img):
     return process_image(img)
 
-@spaces.GPU()
+@spaces.GPU
 def run_process_video(in_path, out_path, csv_path):
     return process_video(
         input_video_path=in_path,
@@ -105,7 +107,7 @@ def run_process_video(in_path, out_path, csv_path):
         csv_output_path=csv_path
     )
 
-@spaces.GPU()
+@spaces.GPU
 def run_process_frame(session, frame):
     return session.process_frame(frame)
 
