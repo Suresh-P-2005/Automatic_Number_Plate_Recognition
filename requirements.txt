@@ -1,5 +1,6 @@
-gradio>=4.0.0
+gradio>=5.0.0
 spaces
+huggingface_hub>=0.26.0
 opencv-python-headless>=4.8.0
 ultralytics>=8.0.0
 easyocr>=1.7.0

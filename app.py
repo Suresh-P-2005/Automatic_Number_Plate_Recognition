@@ -259,7 +259,6 @@ with gr.Blocks(
                 img_input  = gr.Image(
                     label   = "Upload Image (JPG / PNG)",
                     type    = "numpy",
-                    sources = ["upload"],
                 )
                 img_btn    = gr.Button("🔍 Run ANPR", variant="primary")
             with gr.Column():
@@ -309,6 +308,7 @@ with gr.Blocks(
                 sources   = ["webcam"],
                 streaming = True,
                 type      = "numpy",
+                mirror_webcam = True,
             )
             webcam_out = gr.Image(label="ANPR Output", type="numpy")
 
