@@ -1,17 +1,7 @@
 import uvicorn
 from app.main import app
 
-try:
-    import spaces
-except ImportError:
-    class DummySpaces:
-        def GPU(self, func=None, *args, **kwargs):
-            if func is None:
-                def decorator(f):
-                    return f
-                return decorator
-            return func
-    spaces = DummySpaces()
+import spaces
 
 @spaces.GPU
 def dummy_function():
