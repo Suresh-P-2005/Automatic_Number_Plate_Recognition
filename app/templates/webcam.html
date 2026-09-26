@@ -1,192 +1,237 @@
 <!DOCTYPE html>
-
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>
-        Live Webcam ANPR
-    </title>
-
-    <link
-        rel="stylesheet"
-        href="/static/style.css"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Live Webcam ANPR — real-time licence plate recognition using your device webcam.">
+    <title>ANPR — Live Webcam</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
 
-    <main class="container">
+    <!-- ── Navbar ── -->
+    <nav class="anpr-navbar">
+        <span class="nav-logo">⬡ ANPR System</span>
+        <span class="nav-badge" id="cam-status-badge">STANDBY</span>
+    </nav>
 
+    <!-- ── Theme Toggle ── -->
+    <button id="theme-toggle" aria-label="Toggle colour theme" title="Toggle dark / light mode">
+        <span class="icon-moon">🌙</span>
+        <span class="icon-sun">☀️</span>
+    </button>
+
+    <main class="container page-flip">
+
+        <!-- ═══════════════════════════════════════════
+             HERO
+        ═══════════════════════════════════════════ -->
         <section class="hero">
-
-            <h1>
-                Live Webcam ANPR
-            </h1>
-
-            <p>
-                Start your webcam and detect
-                vehicle licence plates in real time.
-            </p>
-
+            <div class="hero-eyebrow">Live Detection</div>
+            <h1>Live Webcam ANPR</h1>
+            <p>Start your webcam and detect vehicle licence plates in real time.</p>
         </section>
 
 
+        <!-- ═══════════════════════════════════════════
+             DUAL CAMERA PANELS
+             ╔════════════════════════════════════════╗
+             ║  DROP ZONE: #webcam and                ║
+             ║  #processed-frame elements preserved   ║
+             ║  (referenced directly by webcam.js)    ║
+             ╚════════════════════════════════════════╝
+        ═══════════════════════════════════════════ -->
         <section class="webcam-section">
 
+            <!-- Live feed panel -->
             <div class="camera-panel">
+                <h2>📷 Live Camera</h2>
 
-                <h2>
-                    Live Camera
-                </h2>
+                <!--
+                .scan-wrapper provides the 3D laser overlay.
+                The .is-scanning class is added/removed by the
+                UI enhancement script below — it does NOT
+                affect webcam.js which reads #webcam directly.
+                -->
+                <div class="scan-wrapper" id="webcam-scan-wrapper">
+                    <div class="scan-laser"></div>
 
-                <video
-                    id="webcam"
-                    autoplay
-                    playsinline
-                ></video>
-
+                    <!--
+                    ╔══════════════════════════════════╗
+                    ║  EXISTING VIDEO ELEMENT          ║
+                    ║  id="webcam" — unchanged         ║
+                    ║  (webcam.js sets .srcObject)     ║
+                    ╚══════════════════════════════════╝
+                    -->
+                    <video id="webcam" autoplay playsinline></video>
+                </div>
             </div>
 
-
+            <!-- ANPR output panel -->
             <div class="camera-panel">
+                <h2>🔍 ANPR Output</h2>
 
-                <h2>
-                    ANPR Output
-                </h2>
+                <div class="scan-wrapper" id="output-scan-wrapper">
+                    <div class="scan-laser"></div>
 
-                <img
-                    id="processed-frame"
-                    alt="Processed ANPR output"
-                >
-
+                    <!--
+                    ╔══════════════════════════════════╗
+                    ║  EXISTING PROCESSED-FRAME IMG    ║
+                    ║  id="processed-frame" — unchanged║
+                    ║  (webcam.js sets .src via b64)   ║
+                    ╚══════════════════════════════════╝
+                    -->
+                    <img id="processed-frame" alt="Processed ANPR output">
+                </div>
             </div>
 
         </section>
 
 
+        <!-- ═══════════════════════════════════════════
+             CONTROLS
+             ╔════════════════════════════════════════╗
+             ║  id="start-camera", "stop-camera",     ║
+             ║  "clear-results" — ALL preserved       ║
+             ║  (webcam.js attaches listeners to them)║
+             ╚════════════════════════════════════════╝
+        ═══════════════════════════════════════════ -->
         <section class="webcam-controls">
 
-            <button
-                id="start-camera"
-            >
-
-                Start Webcam
-
+            <!--
+            Original IDs: start-camera / stop-camera / clear-results
+            All preserved exactly — webcam.js depends on these.
+            -->
+            <button id="start-camera">
+                ▶ Start Webcam
             </button>
 
-
-            <button
-                id="stop-camera"
-                disabled
-            >
-
-                Stop Webcam
-
+            <button id="stop-camera" disabled>
+                ⏹ Stop Webcam
             </button>
 
-            <button
-                id="clear-results"
-                type="button"
-            >
-
-                Clear Results
-
+            <button id="clear-results" type="button">
+                ✕ Clear Results
             </button>
 
         </section>
 
 
+        <!-- ═══════════════════════════════════════════
+             DETECTION STATUS + RESULTS TABLE
+             ╔════════════════════════════════════════╗
+             ║  id="detection-status" — preserved     ║
+             ║  id="result-table" — preserved         ║
+             ║  (webcam.js reads/writes both)         ║
+             ╚════════════════════════════════════════╝
+        ═══════════════════════════════════════════ -->
         <section class="result-section">
+            <h2>Current Detection</h2>
 
-            <h2>
-                Current Detection
-            </h2>
-
-            <div
-                id="detection-status"
-            >
-
+            <!--
+            id="detection-status" — webcam.js sets .textContent
+            -->
+            <div id="detection-status">
                 Webcam is not running.
-
             </div>
 
-
             <table>
-
                 <thead>
-
                     <tr>
-
-                        <th>
-                            Vehicle ID
-                        </th>
-
-                        <th>
-                            Licence Plate
-                        </th>
-
-                        <th>
-                            OCR Readings
-                        </th>
-
+                        <th>Vehicle ID</th>
+                        <th>Licence Plate</th>
+                        <th>OCR Readings</th>
                     </tr>
-
                 </thead>
 
-
-                <tbody
-                    id="result-table"
-                >
-
+                <!--
+                id="result-table" — webcam.js injects <tr> rows here
+                -->
+                <tbody id="result-table">
                     <tr>
-
-                        <td
-                            colspan="3"
-                        >
-
-                            No results yet.
-
-                        </td>
-
+                        <td colspan="3">No results yet.</td>
                     </tr>
-
                 </tbody>
-
             </table>
-
         </section>
 
 
-        <a
-            class="back-button"
-            href="/"
-        >
-
-            Back to Dashboard
-
-        </a>
+        <a class="back-button" href="/">Back to Dashboard</a>
 
     </main>
 
 
-    <canvas
-        id="capture-canvas"
-        hidden
-    ></canvas>
+    <!--
+    ╔══════════════════════════════════════════════════╗
+    ║  HIDDEN CANVAS — required by webcam.js           ║
+    ║  id="capture-canvas" preserved exactly          ║
+    ╚══════════════════════════════════════════════════╝
+    -->
+    <canvas id="capture-canvas" hidden></canvas>
 
 
-    <script
-        src="/static/webcam.js"
-    ></script>
+    <!--
+    ╔══════════════════════════════════════════════════╗
+    ║  EXISTING BACKEND SCRIPT — preserved             ║
+    ║  All functions inside webcam.js are unchanged.  ║
+    ╚══════════════════════════════════════════════════╝
+    -->
+    <script src="/static/webcam.js"></script>
+
+
+    <!-- ── Minimal UI-only JS ── -->
+    <script>
+        /* ── Theme toggle ── */
+        (function () {
+            const html   = document.documentElement;
+            const toggle = document.getElementById('theme-toggle');
+            const saved  = localStorage.getItem('anpr-theme');
+            if (saved) html.setAttribute('data-theme', saved);
+            toggle.addEventListener('click', function () {
+                const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                html.setAttribute('data-theme', next);
+                localStorage.setItem('anpr-theme', next);
+            });
+        })();
+
+        /* ── Laser scan animation mirrors webcam running state ──
+           We observe #detection-status text changes and toggle
+           .is-scanning on the scan wrappers — purely cosmetic,
+           no interference with webcam.js logic.             */
+        (function () {
+            const badge       = document.getElementById('cam-status-badge');
+            const statusEl    = document.getElementById('detection-status');
+            const webcamWrap  = document.getElementById('webcam-scan-wrapper');
+            const outputWrap  = document.getElementById('output-scan-wrapper');
+            const startBtn    = document.getElementById('start-camera');
+            const stopBtn     = document.getElementById('stop-camera');
+
+            function setScanning(active) {
+                if (active) {
+                    webcamWrap.classList.add('is-scanning');
+                    outputWrap.classList.add('is-scanning');
+                    statusEl.classList.add('status-active');
+                    statusEl.classList.remove('status-error');
+                    if (badge) badge.textContent = 'LIVE';
+                } else {
+                    webcamWrap.classList.remove('is-scanning');
+                    outputWrap.classList.remove('is-scanning');
+                    statusEl.classList.remove('status-active');
+                    if (badge) badge.textContent = 'STANDBY';
+                }
+            }
+
+            startBtn.addEventListener('click', function () {
+                setScanning(true);
+            });
+
+            stopBtn.addEventListener('click', function () {
+                setScanning(false);
+            });
+        })();
+    </script>
 
 </body>
 

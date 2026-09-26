@@ -1,137 +1,174 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>
-        ANPR Image Result
-    </title>
-
-    <link
-        rel="stylesheet"
-        href="/static/style.css"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ANPR image processing result — detected vehicles and licence plates from your uploaded image.">
+    <title>ANPR — Image Result</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
 
-    <main class="container">
+    <!-- ── Navbar ── -->
+    <nav class="anpr-navbar">
+        <span class="nav-logo">⬡ ANPR System</span>
+        <span class="nav-badge">RESULT</span>
+    </nav>
 
+    <!-- ── Theme Toggle ── -->
+    <button id="theme-toggle" aria-label="Toggle colour theme" title="Toggle dark / light mode">
+        <span class="icon-moon">🌙</span>
+        <span class="icon-sun">☀️</span>
+    </button>
+
+    <main class="container page-flip">
+
+        <!-- ═══════════════════════════════════════════
+             HERO
+        ═══════════════════════════════════════════ -->
         <section class="hero">
-
-            <h1>
-                Image ANPR Result
-            </h1>
-
-            <p>
-                Vehicle and licence plate
-                detection completed.
-            </p>
-
+            <div class="hero-eyebrow">Detection Complete</div>
+            <h1>Image ANPR Result</h1>
+            <p>Vehicle and licence plate detection completed successfully.</p>
         </section>
 
 
+        <!-- ═══════════════════════════════════════════
+             PROCESSED IMAGE
+             ╔════════════════════════════════════════╗
+             ║  DROP ZONE: output image from backend  ║
+             ║  src="{{ output_image }}" preserved    ║
+             ╚════════════════════════════════════════╝
+        ═══════════════════════════════════════════ -->
         <section class="result-section">
+            <h2>Processed Image</h2>
 
-            <h2>
-                Processed Image
-            </h2>
+            <!--
+            The .scan-wrapper enables the 3D laser animation.
+            .result-image class is preserved for backend rendering.
+            The JS below adds .is-scanning while the image loads,
+            then removes it once src is loaded — purely UI cosmetic.
+            -->
+            <div class="scan-wrapper" id="image-scan-wrapper">
+                <div class="scan-laser"></div>
 
-            <img
-                class="result-image"
-                src="{{ output_image }}"
-                alt="Processed ANPR result"
-            >
-
+                <!--
+                ╔══════════════════════════════════════════╗
+                ║  EXISTING BACKEND-RENDERED IMAGE TAG      ║
+                ║  class="result-image" + Jinja2 src —     ║
+                ║  both preserved exactly as original      ║
+                ╚══════════════════════════════════════════╝
+                -->
+                <img
+                    class="result-image"
+                    id="anpr-result-image"
+                    src="{{ output_image }}"
+                    alt="Processed ANPR result"
+                >
+            </div>
         </section>
 
 
+        <!-- ═══════════════════════════════════════════
+             DETECTED LICENCE PLATES TABLE
+             All Jinja2 variables preserved exactly.
+        ═══════════════════════════════════════════ -->
         <section class="result-section">
+            <h2>Detected Licence Plates</h2>
 
-            <h2>
-                Detected Licence Plates
-            </h2>
-
-
+            <!--
+            ╔══════════════════════════════════════════╗
+            ║  EXISTING JINJA2 TEMPLATE BLOCK          ║
+            ║  {% if results %} ... {% endif %}        ║
+            ║  result.vehicle_id / license_plate /     ║
+            ║  number_of_readings — all unchanged      ║
+            ╚══════════════════════════════════════════╝
+            -->
             {% if results %}
 
             <table>
-
                 <thead>
-
                     <tr>
-
-                        <th>
-                            Vehicle ID
-                        </th>
-
-                        <th>
-                            Licence Plate
-                        </th>
-
-                        <th>
-                            OCR Readings
-                        </th>
-
+                        <th>Vehicle ID</th>
+                        <th>Licence Plate</th>
+                        <th>OCR Readings</th>
                     </tr>
-
                 </thead>
 
-
                 <tbody>
-
                     {% for result in results %}
-
-                    <tr>
-
-                        <td>
-                            {{ result.vehicle_id }}
-                        </td>
-
-                        <td>
-                            {{ result.license_plate }}
-                        </td>
-
-                        <td>
-                            {{ result.number_of_readings }}
-                        </td>
-
+                    <tr class="row-enter">
+                        <td>{{ result.vehicle_id }}</td>
+                        <td>{{ result.license_plate }}</td>
+                        <td>{{ result.number_of_readings }}</td>
                     </tr>
-
                     {% endfor %}
-
                 </tbody>
-
             </table>
 
             {% else %}
 
-            <p>
-                No vehicle or licence plate
-                was detected.
+            <p style="color: var(--text-secondary); padding: 8px 0;">
+                No vehicle or licence plate was detected in this image.
             </p>
 
             {% endif %}
-
         </section>
 
 
-        <a
-            class="back-button"
-            href="/"
-        >
+        <!--
+        ╔══════════════════════════════════════════╗
+        ║  EXISTING BACK LINK                       ║
+        ║  class="back-button" href="/" preserved  ║
+        ╚══════════════════════════════════════════╝
+        -->
+        <a class="back-button" href="/">
             Process Another File
         </a>
 
     </main>
+
+
+    <!-- ── Minimal UI JS ── -->
+    <script>
+        /* ── Theme toggle ── */
+        (function () {
+            const html   = document.documentElement;
+            const toggle = document.getElementById('theme-toggle');
+            const saved  = localStorage.getItem('anpr-theme');
+            if (saved) html.setAttribute('data-theme', saved);
+            toggle.addEventListener('click', function () {
+                const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                html.setAttribute('data-theme', next);
+                localStorage.setItem('anpr-theme', next);
+            });
+        })();
+
+        /* ── 3D laser scan animation plays while result image loads ── */
+        (function () {
+            const wrapper = document.getElementById('image-scan-wrapper');
+            const img     = document.getElementById('anpr-result-image');
+
+            if (!wrapper || !img) return;
+
+            /* Start scan animation */
+            wrapper.classList.add('is-scanning');
+
+            /* Remove once image fully loads */
+            img.addEventListener('load', function () {
+                setTimeout(function () {
+                    wrapper.classList.remove('is-scanning');
+                }, 600);
+            });
+
+            /* Also remove on error to avoid infinite sweep */
+            img.addEventListener('error', function () {
+                wrapper.classList.remove('is-scanning');
+            });
+        })();
+    </script>
 
 </body>
 

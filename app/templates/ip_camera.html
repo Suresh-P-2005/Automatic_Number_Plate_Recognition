@@ -1,65 +1,61 @@
 <!DOCTYPE html>
-
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>
-        IP Camera ANPR
-    </title>
-
-    <link
-        rel="stylesheet"
-        href="/static/style.css"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IP Camera ANPR — connect an IP camera stream for live licence plate recognition.">
+    <title>ANPR — IP Camera</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
 
-    <main class="container">
+    <!-- ── Navbar ── -->
+    <nav class="anpr-navbar">
+        <span class="nav-logo">⬡ ANPR System</span>
+        <span class="nav-badge" id="ip-status-badge">STANDBY</span>
+    </nav>
 
+    <!-- ── Theme Toggle ── -->
+    <button id="theme-toggle" aria-label="Toggle colour theme" title="Toggle dark / light mode">
+        <span class="icon-moon">🌙</span>
+        <span class="icon-sun">☀️</span>
+    </button>
+
+    <main class="container page-flip">
+
+        <!-- ═══════════════════════════════════════════
+             HERO
+        ═══════════════════════════════════════════ -->
         <section class="hero">
-
-            <h1>
-                IP Camera ANPR
-            </h1>
-
-            <p>
-                Connect an IP camera stream
-                and perform live licence
-                plate recognition.
-            </p>
-
+            <div class="hero-eyebrow">Network Camera</div>
+            <h1>IP Camera ANPR</h1>
+            <p>Connect an IP camera stream and perform live licence plate recognition.</p>
         </section>
 
 
+        <!-- ═══════════════════════════════════════════
+             CONNECT FORM
+             ╔════════════════════════════════════════╗
+             ║  id="ip-camera-form" — preserved       ║
+             ║  id="camera-url" — preserved           ║
+             ║  (ip_camera.js attaches listeners)     ║
+             ╚════════════════════════════════════════╝
+        ═══════════════════════════════════════════ -->
         <section class="result-section">
+            <h2>Connect Camera</h2>
 
-            <h2>
-                Connect Camera
-            </h2>
+            <!--
+            id="ip-camera-form" — ip_camera.js attaches submit listener
+            -->
+            <form id="ip-camera-form">
 
-            <form
-                id="ip-camera-form"
-            >
+                <label for="camera-url">Camera Stream URL</label>
 
-                <label
-                    for="camera-url"
-                >
-
-                    Camera Stream URL
-
-                </label>
-
-
+                <!--
+                id="camera-url" — ip_camera.js reads .value
+                -->
                 <input
                     id="camera-url"
                     type="text"
@@ -67,180 +63,191 @@
                     required
                 >
 
-
-                <button
-                    type="submit"
-                >
-
-                    Connect Camera
-
+                <button type="submit">
+                    📡 Connect Camera
                 </button>
 
             </form>
 
-
             <p class="small-note">
-
-                Example:
-
-                http://192.168.1.10:8080/video
-
+                Example: http://192.168.1.10:8080/video
             </p>
-
         </section>
 
 
+        <!-- ═══════════════════════════════════════════
+             CONTROLS
+             ╔════════════════════════════════════════╗
+             ║  id="start-ip-camera", "stop-ip-camera"║
+             ║  id="clear-ip-results" — ALL preserved ║
+             ║  (ip_camera.js attaches listeners)     ║
+             ╚════════════════════════════════════════╝
+        ═══════════════════════════════════════════ -->
         <section class="webcam-controls">
 
-            <button
-                id="start-ip-camera"
-                disabled
-            >
-
-                Start ANPR
-
+            <!--
+            Original IDs preserved — ip_camera.js depends on these.
+            -->
+            <button id="start-ip-camera" disabled>
+                ▶ Start ANPR
             </button>
 
-
-            <button
-                id="stop-ip-camera"
-                disabled
-            >
-
-                Stop Camera
-
+            <button id="stop-ip-camera" disabled>
+                ⏹ Stop Camera
             </button>
 
-
-            <button
-                id="clear-ip-results"
-                type="button"
-            >
-
-                Clear Results
-
+            <button id="clear-ip-results" type="button">
+                ✕ Clear Results
             </button>
 
         </section>
 
 
+        <!-- ═══════════════════════════════════════════
+             DUAL CAMERA PANELS
+             ╔════════════════════════════════════════╗
+             ║  id="ip-camera-frame" — preserved      ║
+             ║  id="ip-processed-frame" — preserved   ║
+             ║  (ip_camera.js sets .src via b64)      ║
+             ╚════════════════════════════════════════╝
+        ═══════════════════════════════════════════ -->
         <section class="webcam-section">
 
             <div class="camera-panel">
+                <h2>📡 IP Camera Feed</h2>
 
-                <h2>
-                    IP Camera Feed
-                </h2>
+                <div class="scan-wrapper" id="ip-live-scan-wrapper">
+                    <div class="scan-laser"></div>
 
-                <img
-                    id="ip-camera-frame"
-                    alt="IP camera feed"
-                >
-
+                    <!--
+                    id="ip-camera-frame" — ip_camera.js sets .src
+                    -->
+                    <img id="ip-camera-frame" alt="IP camera feed">
+                </div>
             </div>
-
 
             <div class="camera-panel">
+                <h2>🔍 ANPR Output</h2>
 
-                <h2>
-                    ANPR Output
-                </h2>
+                <div class="scan-wrapper" id="ip-output-scan-wrapper">
+                    <div class="scan-laser"></div>
 
-                <img
-                    id="ip-processed-frame"
-                    alt="Processed ANPR output"
-                >
-
+                    <!--
+                    id="ip-processed-frame" — ip_camera.js sets .src
+                    -->
+                    <img id="ip-processed-frame" alt="Processed ANPR output">
+                </div>
             </div>
 
         </section>
 
 
+        <!-- ═══════════════════════════════════════════
+             CAMERA STATUS + RESULTS TABLE
+             ╔════════════════════════════════════════╗
+             ║  id="ip-camera-status" — preserved     ║
+             ║  id="ip-result-table" — preserved      ║
+             ║  (ip_camera.js reads/writes both)      ║
+             ╚════════════════════════════════════════╝
+        ═══════════════════════════════════════════ -->
         <section class="result-section">
+            <h2>Camera Status</h2>
 
-            <h2>
-                Camera Status
-            </h2>
-
-            <div
-                id="ip-camera-status"
-            >
-
-                Enter a camera URL
-                and connect.
-
+            <!--
+            id="ip-camera-status" — ip_camera.js sets .textContent
+            -->
+            <div id="ip-camera-status">
+                Enter a camera URL and connect.
             </div>
-
         </section>
 
-
         <section class="result-section">
-
-            <h2>
-                Detected Licence Plates
-            </h2>
+            <h2>Detected Licence Plates</h2>
 
             <table>
-
                 <thead>
-
                     <tr>
-
-                        <th>
-                            Vehicle ID
-                        </th>
-
-                        <th>
-                            Licence Plate
-                        </th>
-
-                        <th>
-                            OCR Readings
-                        </th>
-
+                        <th>Vehicle ID</th>
+                        <th>Licence Plate</th>
+                        <th>OCR Readings</th>
                     </tr>
-
                 </thead>
 
-
-                <tbody
-                    id="ip-result-table"
-                >
-
+                <!--
+                id="ip-result-table" — ip_camera.js injects <tr> rows here
+                -->
+                <tbody id="ip-result-table">
                     <tr>
-
-                        <td
-                            colspan="3"
-                        >
-
-                            No results yet.
-
-                        </td>
-
+                        <td colspan="3">No results yet.</td>
                     </tr>
-
                 </tbody>
-
             </table>
-
         </section>
 
 
-        <a
-            class="back-button"
-            href="/"
-        >
-
-            Back to Dashboard
-
-        </a>
+        <a class="back-button" href="/">Back to Dashboard</a>
 
     </main>
 
 
-    <script
-        src="/static/ip_camera.js"
-    ></script>
+    <!--
+    ╔══════════════════════════════════════════════════╗
+    ║  EXISTING BACKEND SCRIPT — preserved             ║
+    ║  All functions inside ip_camera.js unchanged.   ║
+    ╚══════════════════════════════════════════════════╝
+    -->
+    <script src="/static/ip_camera.js"></script>
+
+
+    <!-- ── Minimal UI-only JS ── -->
+    <script>
+        /* ── Theme toggle ── */
+        (function () {
+            const html   = document.documentElement;
+            const toggle = document.getElementById('theme-toggle');
+            const saved  = localStorage.getItem('anpr-theme');
+            if (saved) html.setAttribute('data-theme', saved);
+            toggle.addEventListener('click', function () {
+                const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                html.setAttribute('data-theme', next);
+                localStorage.setItem('anpr-theme', next);
+            });
+        })();
+
+        /* ── Laser scan animation mirrors IP camera running state ──
+           Purely cosmetic — no interference with ip_camera.js.   */
+        (function () {
+            const badge       = document.getElementById('ip-status-badge');
+            const statusEl    = document.getElementById('ip-camera-status');
+            const liveWrap    = document.getElementById('ip-live-scan-wrapper');
+            const outWrap     = document.getElementById('ip-output-scan-wrapper');
+            const startBtn    = document.getElementById('start-ip-camera');
+            const stopBtn     = document.getElementById('stop-ip-camera');
+
+            function setScanning(active) {
+                if (active) {
+                    liveWrap.classList.add('is-scanning');
+                    outWrap.classList.add('is-scanning');
+                    statusEl.classList.add('status-active');
+                    statusEl.classList.remove('status-error');
+                    if (badge) badge.textContent = 'LIVE';
+                } else {
+                    liveWrap.classList.remove('is-scanning');
+                    outWrap.classList.remove('is-scanning');
+                    statusEl.classList.remove('status-active');
+                    if (badge) badge.textContent = 'STANDBY';
+                }
+            }
+
+            startBtn.addEventListener('click', function () {
+                setScanning(true);
+            });
+
+            stopBtn.addEventListener('click', function () {
+                setScanning(false);
+            });
+        })();
+    </script>
 
 </body>
 

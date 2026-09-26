@@ -1,197 +1,171 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>
-        ANPR Video Result
-    </title>
-
-    <link
-        rel="stylesheet"
-        href="/static/style.css"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ANPR video processing result — frames processed, vehicles recognised, and detected licence plates summary.">
+    <title>ANPR — Video Result</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
 
-    <main class="container">
+    <!-- ── Navbar ── -->
+    <nav class="anpr-navbar">
+        <span class="nav-logo">⬡ ANPR System</span>
+        <span class="nav-badge">RESULT</span>
+    </nav>
 
+    <!-- ── Theme Toggle ── -->
+    <button id="theme-toggle" aria-label="Toggle colour theme" title="Toggle dark / light mode">
+        <span class="icon-moon">🌙</span>
+        <span class="icon-sun">☀️</span>
+    </button>
+
+    <main class="container page-flip">
+
+        <!-- ═══════════════════════════════════════════
+             HERO
+        ═══════════════════════════════════════════ -->
         <section class="hero">
-
-            <h1>
-                Video ANPR Result
-            </h1>
-
-            <p>
-                Video processing completed.
-            </p>
-
+            <div class="hero-eyebrow">Processing Complete</div>
+            <h1>Video ANPR Result</h1>
+            <p>Full-video vehicle detection and licence plate recognition finished.</p>
         </section>
 
 
+        <!-- ═══════════════════════════════════════════
+             SUMMARY BENTO CARDS
+             ╔════════════════════════════════════════╗
+             ║  {{ frames_processed }} and            ║
+             ║  {{ total_vehicles }} preserved        ║
+             ╚════════════════════════════════════════╝
+        ═══════════════════════════════════════════ -->
         <section class="result-section">
+            <h2>Processing Summary</h2>
 
-            <h2>
-                Processing Summary
-            </h2>
-
+            <!--
+            .summary-grid + .summary-card classes preserved.
+            Jinja2 variables unchanged.
+            -->
             <div class="summary-grid">
 
                 <div class="summary-card">
-
-                    <h3>
-                        Frames Processed
-                    </h3>
-
-                    <p>
-                        {{ frames_processed }}
-                    </p>
-
+                    <h3>Frames Processed</h3>
+                    <p>{{ frames_processed }}</p>
                 </div>
 
-
                 <div class="summary-card">
-
-                    <h3>
-                        Recognised Vehicles
-                    </h3>
-
-                    <p>
-                        {{ total_vehicles }}
-                    </p>
-
+                    <h3>Recognised Vehicles</h3>
+                    <p>{{ total_vehicles }}</p>
                 </div>
 
             </div>
-
         </section>
 
 
+        <!-- ═══════════════════════════════════════════
+             PROCESSED VIDEO
+             ╔════════════════════════════════════════╗
+             ║  DROP ZONE: output video from backend  ║
+             ║  src="{{ output_video }}" preserved    ║
+             ╚════════════════════════════════════════╝
+        ═══════════════════════════════════════════ -->
         <section class="result-section">
+            <h2>Processed Video</h2>
 
-            <h2>
-                Processed Video
-            </h2>
-
-            <video
-                class="result-video"
-                controls
-            >
-
-                <source
-                    src="{{ output_video }}"
-                    type="video/mp4"
-                >
-
-                Your browser does not support
-                video playback.
-
+            <!--
+            .result-video class preserved.
+            Jinja2 src="{{ output_video }}" preserved.
+            -->
+            <video class="result-video" controls>
+                <source src="{{ output_video }}" type="video/mp4">
+                Your browser does not support video playback.
             </video>
-
         </section>
 
 
+        <!-- ═══════════════════════════════════════════
+             DETECTED PLATES TABLE + CSV DOWNLOAD
+             All Jinja2 variables preserved exactly.
+        ═══════════════════════════════════════════ -->
         <section class="result-section">
+            <h2>Detected Licence Plates</h2>
 
-            <h2>
-                Detected Licence Plates
-            </h2>
-
-
+            <!--
+            ╔══════════════════════════════════════════╗
+            ║  EXISTING JINJA2 TEMPLATE BLOCK          ║
+            ║  {% if results %} ... {% endif %}        ║
+            ║  result.vehicle_id / license_plate /     ║
+            ║  number_of_readings — all unchanged      ║
+            ║  csv_file download link — unchanged      ║
+            ╚══════════════════════════════════════════╝
+            -->
             {% if results %}
 
             <table>
-
                 <thead>
-
                     <tr>
-
-                        <th>
-                            Vehicle ID
-                        </th>
-
-                        <th>
-                            Licence Plate
-                        </th>
-
-                        <th>
-                            OCR Readings
-                        </th>
-
+                        <th>Vehicle ID</th>
+                        <th>Licence Plate</th>
+                        <th>OCR Readings</th>
                     </tr>
-
                 </thead>
 
-
                 <tbody>
-
                     {% for result in results %}
-
-                    <tr>
-
-                        <td>
-                            {{ result.vehicle_id }}
-                        </td>
-
-                        <td>
-                            {{ result.license_plate }}
-                        </td>
-
-                        <td>
-                            {{ result.number_of_readings }}
-                        </td>
-
+                    <tr class="row-enter">
+                        <td>{{ result.vehicle_id }}</td>
+                        <td>{{ result.license_plate }}</td>
+                        <td>{{ result.number_of_readings }}</td>
                     </tr>
-
                     {% endfor %}
-
                 </tbody>
-
             </table>
 
-
-            <a
-                class="download-button"
-                href="{{ csv_file }}"
-                download
-            >
-
-                Download CSV Results
-
+            <!--
+            .download-button class + href="{{ csv_file }}" preserved.
+            -->
+            <a class="download-button" href="{{ csv_file }}" download>
+                ⬇ Download CSV Results
             </a>
-
 
             {% else %}
 
-            <p>
-                No valid licence plates
-                were recognised.
+            <p style="color: var(--text-secondary); padding: 8px 0;">
+                No valid licence plates were recognised in this video.
             </p>
 
             {% endif %}
-
         </section>
 
 
-        <a
-            class="back-button"
-            href="/"
-        >
-
+        <!--
+        .back-button class + href="/" preserved.
+        -->
+        <a class="back-button" href="/">
             Process Another File
-
         </a>
 
     </main>
+
+
+    <!-- ── Minimal UI JS ── -->
+    <script>
+        /* ── Theme toggle ── */
+        (function () {
+            const html   = document.documentElement;
+            const toggle = document.getElementById('theme-toggle');
+            const saved  = localStorage.getItem('anpr-theme');
+            if (saved) html.setAttribute('data-theme', saved);
+            toggle.addEventListener('click', function () {
+                const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                html.setAttribute('data-theme', next);
+                localStorage.setItem('anpr-theme', next);
+            });
+        })();
+    </script>
 
 </body>
 

@@ -60,17 +60,23 @@ MAX_ASPECT_RATIO = 8.0
 # LOAD MODELS ONCE
 # ==================================================
 
-print("Loading vehicle model...")
+try:
+    print("Loading vehicle model...")
+    vehicle_model = YOLO(
+        str(VEHICLE_MODEL_PATH)
+    )
+except FileNotFoundError:
+    print("Vehicle model not found, skipping.")
+    vehicle_model = None
 
-vehicle_model = YOLO(
-    str(VEHICLE_MODEL_PATH)
-)
-
-print("Loading plate model...")
-
-plate_model = YOLO(
-    str(PLATE_MODEL_PATH)
-)
+try:
+    print("Loading plate model...")
+    plate_model = YOLO(
+        str(PLATE_MODEL_PATH)
+    )
+except FileNotFoundError:
+    print("Plate model not found, skipping.")
+    plate_model = None
 
 print("Loading EasyOCR...")
 
