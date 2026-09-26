@@ -4,9 +4,11 @@ emoji: 🚗
 colorFrom: blue
 colorTo: green
 sdk: gradio
-sdk_version: "4.0.0"
+sdk_version: 6.28.0
 app_file: run.py
 pinned: false
+thumbnail: >-
+  https://cdn-uploads.huggingface.co/production/uploads/6a44bff02c0571692db37174/nlSoHopRWT594vnRgmyhm.png
 ---
 
 # 🚗 Automatic Number Plate Recognition (ANPR) System
