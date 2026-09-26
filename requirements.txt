@@ -1,7 +1,5 @@
-fastapi>=0.100.0
-uvicorn[standard]>=0.22.0
-jinja2>=3.1.2
-python-multipart>=0.0.6
+gradio>=4.0.0
+spaces
 opencv-python-headless>=4.8.0
 ultralytics>=8.0.0
 easyocr>=1.7.0

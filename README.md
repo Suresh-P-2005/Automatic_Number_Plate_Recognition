@@ -3,8 +3,9 @@ title: ANPR
 emoji: 🚗
 colorFrom: blue
 colorTo: green
-sdk: docker
-app_port: 7860
+sdk: gradio
+sdk_version: 4.44.0
+app_file: app.py
 pinned: false
 thumbnail: >-
   https://cdn-uploads.huggingface.co/production/uploads/6a44bff02c0571692db37174/nlSoHopRWT594vnRgmyhm.png
