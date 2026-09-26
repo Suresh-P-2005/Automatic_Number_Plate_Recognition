@@ -26,6 +26,9 @@ from fastapi.templating import (
 import spaces
 
 
+@spaces.GPU(duration=1)
+def _startup_probe():
+    pass
 
 # ==========================================
 # PROJECT PATHS
