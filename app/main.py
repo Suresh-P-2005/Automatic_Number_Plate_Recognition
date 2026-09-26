@@ -23,6 +23,17 @@ from fastapi.templating import (
     Jinja2Templates
 )
 
+try:
+    import spaces
+    has_spaces = True
+except ImportError:
+    has_spaces = False
+
+def optional_gpu_decorator(func):
+    if has_spaces:
+        return spaces.GPU()(func)
+    return func
+
 
 # ==========================================
 # PROJECT PATHS
@@ -265,7 +276,7 @@ def home(
 @app.post(
     "/process-image"
 )
-
+@optional_gpu_decorator
 async def process_uploaded_image(
     request: Request,
     image: UploadFile = File(...)
@@ -401,7 +412,7 @@ async def process_uploaded_image(
 @app.post(
     "/process-video"
 )
-
+@optional_gpu_decorator
 async def process_uploaded_video(
     request: Request,
     video: UploadFile = File(...)
@@ -559,7 +570,7 @@ def webcam_page(
 @app.post(
     "/process-webcam-frame"
 )
-
+@optional_gpu_decorator
 async def process_webcam_frame(
     frame: UploadFile = File(...)
 ):
