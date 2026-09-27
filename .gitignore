@@ -26,3 +26,7 @@ outputs/
 
 # Jupyter checkpoints
 .ipynb_checkpoints/
+
+# Large binary/image files (use HF LFS if needed)
+thumb.png
+*.png.bak
