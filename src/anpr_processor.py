@@ -60,32 +60,30 @@ MAX_ASPECT_RATIO = 8.0
 # LOAD MODELS ONCE
 # ==================================================
 
-try:
-    print("Loading vehicle model...")
-    vehicle_model = YOLO(
-        str(VEHICLE_MODEL_PATH)
-    )
-except FileNotFoundError:
-    print("Vehicle model not found, skipping.")
-    vehicle_model = None
+vehicle_model = None
+plate_model = None
+ocr_reader = None
 
-try:
-    print("Loading plate model...")
-    plate_model = YOLO(
-        str(PLATE_MODEL_PATH)
-    )
-except FileNotFoundError:
-    print("Plate model not found, skipping.")
-    plate_model = None
+def get_vehicle_model():
+    global vehicle_model
+    if vehicle_model is None:
+        print("Loading vehicle model...")
+        vehicle_model = YOLO(str(VEHICLE_MODEL_PATH))
+    return vehicle_model
 
-print("Loading EasyOCR...")
+def get_plate_model():
+    global plate_model
+    if plate_model is None:
+        print("Loading plate model...")
+        plate_model = YOLO(str(PLATE_MODEL_PATH))
+    return plate_model
 
-ocr_reader = easyocr.Reader(
-    ["en"],
-    gpu=False
-)
-
-print("ANPR models loaded.")
+def get_ocr_reader():
+    global ocr_reader
+    if ocr_reader is None:
+        print("Loading EasyOCR...")
+        ocr_reader = easyocr.Reader(["en"], gpu=False)
+    return ocr_reader
 
 
 # ==================================================
@@ -123,7 +121,7 @@ def read_plate(image):
         image
     )
 
-    results = ocr_reader.readtext(
+    results = get_ocr_reader().readtext(
         enhanced,
         detail=1,
         paragraph=False,
@@ -244,14 +242,13 @@ class ANPRSession:
         # VEHICLE DETECTION + TRACKING
         # ==========================================
 
-        vehicle_results = (
-            vehicle_model.track(
-                frame,
-                persist=True,
-                conf=VEHICLE_CONFIDENCE,
-                tracker="bytetrack.yaml",
-                verbose=False
-            )
+        vehicle_results = get_vehicle_model().track(
+            
+            frame,
+            persist=True,
+            conf=VEHICLE_CONFIDENCE,
+            tracker="bytetrack.yaml",
+            verbose=False
         )
 
         result = vehicle_results[0]
@@ -369,13 +366,11 @@ class ANPRSession:
             # PLATE DETECTION
             # ======================================
 
-            plate_results = (
-                plate_model.predict(
-                    source=vehicle_crop,
-                    conf=PLATE_CONFIDENCE,
-                    imgsz=640,
-                    verbose=False
-                )
+            plate_results = get_plate_model().predict(
+                source=vehicle_crop,
+                conf=PLATE_CONFIDENCE,
+                imgsz=640,
+                verbose=False
             )
 
             plate_result = (
@@ -666,7 +661,7 @@ def process_image(image):
     detected_results = []
 
     # Detect vehicles in the image
-    vehicle_results = vehicle_model.predict(
+    vehicle_results = get_vehicle_model().predict(
         source=image,
         conf=VEHICLE_CONFIDENCE,
         verbose=False
@@ -741,7 +736,7 @@ def process_image(image):
         )
 
         # Detect licence plate inside vehicle
-        plate_results = plate_model.predict(
+        plate_results = get_plate_model().predict(
             source=vehicle_crop,
             conf=PLATE_CONFIDENCE,
             imgsz=640,

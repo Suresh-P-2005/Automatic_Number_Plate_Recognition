@@ -103,26 +103,30 @@ def run_image_anpr(image_rgb):
 # 2. VIDEO ANPR
 # ==================================================
 
+from video_processor import convert_to_browser_video
+
 @spaces.GPU(duration=120)
-def run_video_anpr(video_path):
-    """
-    Accepts a video file path from Gradio, runs ANPR on
-    every frame, returns (output_video_path, results_md,
-    csv_file_path).
-    """
-    if video_path is None:
-        return None, "❌ Please upload a video first.", None
-
-    uid          = str(uuid.uuid4())
-    output_path  = OUTPUT_VIDEO_DIR / f"processed_{uid}.mp4"
-    csv_path     = OUTPUT_CSV_DIR   / f"results_{uid}.csv"
-
-    # process_video must handle its own CUDA operations inside
-    result = process_video(
+def process_video_forward_pass(video_path, output_path, csv_path):
+    return process_video(
         input_video_path  = video_path,
         output_video_path = output_path,
         csv_output_path   = csv_path,
     )
+
+def run_video_anpr(video_path):
+    if video_path is None:
+        return None, "❌ Please upload a video first.", None
+
+    uid          = str(uuid.uuid4())
+    final_output_path  = OUTPUT_VIDEO_DIR / f"processed_{uid}.mp4"
+    csv_path     = OUTPUT_CSV_DIR   / f"results_{uid}.csv"
+
+    # 1. Run inference holding the GPU
+    result = process_video_forward_pass(video_path, final_output_path, csv_path)
+    
+    # 2. Run ffmpeg on CPU (after GPU is released)
+    convert_to_browser_video(result["temporary_video"], final_output_path)
+    Path(result["temporary_video"]).unlink(missing_ok=True)
 
     summary = (
         f"✅ **Processing complete!**\n\n"
@@ -133,8 +137,7 @@ def run_video_anpr(video_path):
 
     csv_out = str(csv_path) if csv_path.exists() else None
 
-    return str(output_path), summary, csv_out
-
+    return str(final_output_path), summary, csv_out
 
 # ==================================================
 # 3. WEBCAM ANPR  (streaming, frame-by-frame)

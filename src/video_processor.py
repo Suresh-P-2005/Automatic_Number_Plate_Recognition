@@ -245,31 +245,6 @@ def process_video(
     out.release()
 
 
-    # Convert OpenCV output to
-    # browser-compatible H.264 MP4
-
-    print(
-        "\nConverting video "
-        "for browser playback..."
-    )
-
-
-    convert_to_browser_video(
-        input_video_path=(
-            temporary_video_path
-        ),
-        output_video_path=(
-            output_video_path
-        )
-    )
-
-
-    # Remove temporary video
-
-    if temporary_video_path.exists():
-
-        temporary_video_path.unlink()
-
 
     # Get final OCR-voted results
 
@@ -348,8 +323,8 @@ def process_video(
             final_results
         ),
 
-        "output_video": str(
-            output_video_path
+        "temporary_video": str(
+            temporary_video_path
         ),
 
         "csv_file": str(
