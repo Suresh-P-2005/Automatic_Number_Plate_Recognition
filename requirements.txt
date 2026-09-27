@@ -4,6 +4,5 @@ easyocr>=1.7.0
 numpy>=1.24.0
 torchvision>=0.15.0
 pillow>=9.5.0
-gradio==4.44.1
-huggingface_hub==0.24.7
+gradio>=5.0.0
 spaces
