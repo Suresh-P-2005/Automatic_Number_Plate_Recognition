@@ -321,22 +321,22 @@ with gr.Blocks(
     with gr.Tab("📹 Webcam"):
         gr.Markdown(
             "### Live webcam licence plate detection\n"
-            "Allow browser camera access, then click **Start**."
+            "Allow browser camera access, capture a frame, then click **Process Frame**."
         )
         with gr.Row():
             webcam_in  = gr.Image(
                 label     = "Webcam Input",
                 sources   = ["webcam"],
-                streaming = True,
                 type      = "numpy",
                 mirror_webcam = True,
             )
             webcam_out = gr.Image(label="ANPR Output", type="numpy")
 
+        process_btn  = gr.Button("📸 Process Frame", variant="primary")
         reset_btn    = gr.Button("🔄 Reset Session")
         reset_status = gr.Markdown()
 
-        webcam_in.stream(
+        process_btn.click(
             fn      = run_webcam_frame,
             inputs  = [webcam_in],
             outputs = [webcam_out],
