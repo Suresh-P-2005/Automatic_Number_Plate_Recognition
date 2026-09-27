@@ -328,7 +328,6 @@ with gr.Blocks(
                 label     = "Webcam Input",
                 sources   = ["webcam"],
                 type      = "numpy",
-                mirror_webcam = True,
             )
             webcam_out = gr.Image(label="ANPR Output", type="numpy")
 
