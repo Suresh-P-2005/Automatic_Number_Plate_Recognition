@@ -35,10 +35,23 @@ for d in [OUTPUT_IMAGE_DIR, OUTPUT_VIDEO_DIR, OUTPUT_CSV_DIR]:
 from anpr_processor import process_image, ANPRSession
 from video_processor import process_video
 
-# Persistent session objects (one per feature)
-_webcam_session    = ANPRSession()
-_ip_camera_session = ANPRSession()
+# We initialize these lazily to avoid triggering GPU memory
+# allocation during the global app startup phase. 
+_webcam_session    = None
+_ip_camera_session = None
 _ip_camera_capture = None   # cv2.VideoCapture handle
+
+def get_webcam_session():
+    global _webcam_session
+    if _webcam_session is None:
+        _webcam_session = ANPRSession()
+    return _webcam_session
+
+def get_ip_camera_session():
+    global _ip_camera_session
+    if _ip_camera_session is None:
+        _ip_camera_session = ANPRSession()
+    return _ip_camera_session
 
 # ==================================================
 # HELPERS
@@ -79,6 +92,7 @@ def run_image_anpr(image_rgb):
     # Gradio gives RGB; convert to BGR for OpenCV/YOLO
     image_bgr = cv2.cvtColor(image_rgb, cv2.COLOR_RGB2BGR)
 
+    # Models inside process_image will be moved to CUDA safely here
     processed_bgr, results = process_image(image_bgr)
     processed_rgb = _bgr_to_rgb(processed_bgr)
 
@@ -89,7 +103,7 @@ def run_image_anpr(image_rgb):
 # 2. VIDEO ANPR
 # ==================================================
 
-@spaces.GPU
+@spaces.GPU(duration=120)
 def run_video_anpr(video_path):
     """
     Accepts a video file path from Gradio, runs ANPR on
@@ -103,6 +117,7 @@ def run_video_anpr(video_path):
     output_path  = OUTPUT_VIDEO_DIR / f"processed_{uid}.mp4"
     csv_path     = OUTPUT_CSV_DIR   / f"results_{uid}.csv"
 
+    # process_video must handle its own CUDA operations inside
     result = process_video(
         input_video_path  = video_path,
         output_video_path = output_path,
@@ -135,7 +150,10 @@ def run_webcam_frame(frame_rgb):
         return frame_rgb
 
     frame_bgr = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
-    processed_bgr, _ = _webcam_session.process_frame(frame_bgr)
+    
+    # Lazy load session inside the GPU decorator
+    session = get_webcam_session()
+    processed_bgr, _ = session.process_frame(frame_bgr)
     return _bgr_to_rgb(processed_bgr)
 
 
@@ -152,7 +170,7 @@ def reset_webcam_session():
 
 def connect_ip_camera(camera_url: str):
     """Open an RTSP / HTTP camera stream."""
-    global _ip_camera_capture, _ip_camera_session
+    global _ip_camera_capture
 
     camera_url = camera_url.strip()
     if not camera_url:
@@ -175,7 +193,6 @@ def connect_ip_camera(camera_url: str):
         return "❌ Connected but could not read a frame from the stream."
 
     _ip_camera_capture = cap
-    _ip_camera_session = ANPRSession()
     return "✅ IP camera connected successfully!"
 
 
@@ -206,7 +223,11 @@ def grab_ip_camera_frame():
         )
 
     original_rgb = _bgr_to_rgb(frame_bgr)
-    processed_bgr, results = _ip_camera_session.process_frame(frame_bgr)
+    
+    # Lazy load session inside the GPU decorator
+    session = get_ip_camera_session()
+    processed_bgr, results = session.process_frame(frame_bgr)
+    
     processed_rgb = _bgr_to_rgb(processed_bgr)
 
     status = (
